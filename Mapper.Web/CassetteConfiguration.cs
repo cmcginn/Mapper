@@ -31,10 +31,22 @@ namespace Mapper.Web
             bundles.Add<ScriptBundle>("modernizr", new[] { "~/Scripts/modernizr-2.6.2.js" });
             bundles.Add<ScriptBundle>("jquery", new[] { "~/Scripts/jquery-1.10.2.js" });
             bundles.Add<ScriptBundle>("bootstrap", new[] { "~/Scripts/bootstrap.js" });
+            bundles.Add<ScriptBundle>("json2html", new[]
+            {
+                "~/Scripts/Vendor/json2html/json2html.js",
+                "~/Scripts/Vendor/json2html/jquery.json2html.js",
+                "~/Scripts/Vendor/json2html/json2html.helper.js"
+            });
             // Stylesheets
-            bundles.Add<StylesheetBundle>("jquery", new[] { "~/Content/themes/base/all.css" });
+            bundles.Add<StylesheetBundle>("jquery", new[]
+            {
+                "~/Content/themes/base/base.css",
+                "~/Content/themes/base/theme.css",
+                "~/Content/themes/base/all.css"
+            });
             bundles.Add<StylesheetBundle>("bootstrap", new[] { "~/Content/bootstrap.css" });
             bundles.Add<StylesheetBundle>("common", new[] { "~/Content/Site.css" });
+            bundles.Add<StylesheetBundle>("json2html", new[]{"~/Content/json2html/json2html.css"});
         }
     }
 }
