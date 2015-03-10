@@ -1,0 +1,152 @@
+﻿
+<div class="container">
+    <form id="setupForm" role="form">
+
+
+        <div class="row">
+
+
+
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">JSON</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="form-group">
+                            <textarea class="form-control" id="jsonSourceString"></textarea>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">JSON</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="form-group">
+                            <textarea class="form-control" id="jsonTargetString"></textarea>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <button class="btn btn-primary pull-right" type="button" id="visualize">Visualize</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-sm-4" id="topSource">
+
+        </div>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-4" id="topTarget">
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script>
+        var endpointOptionsSource, endpointOptionsTarget;
+        jsPlumb.bind("ready", function() {
+            jsPlumb.importDefaults({
+                Connector: "Straight",
+                EndpointStyle: { fillStyle: "#456", width: 5, height: 5 },
+                PaintStyle: { lineWidth: 1, strokeStyle: "#456" }
+            });
+            endpointOptionsSource = { endpoint: "Rectangle", anchor: ["Right", { shape: "Rectangle" }], isSource: true };
+            endpointOptionsTarget = { endpoint: "Rectangle", anchor: ["Left", { shape: "Rectangle" }], isTarget: true };
+        });
+        var sourceNodes = [];
+        var transforms = {
+            'object': {
+                'tag': 'div',
+                'class': 'package ${show} ${type}',
+                'children': [
+                    {
+                        'tag': 'div',
+                        'class': 'header',
+                        'children': [
+                            {
+                                'tag': 'div',
+                                'class': function(obj) {
+                                    if (getValue(obj.value) !== undefined) return ('arrow hide');
+                                    else return ('arrow');
+                                }
+                            },
+                            { 'tag': 'span', 'class': 'name', 'html': '${name}' },
+                            {
+                                'tag': 'span',
+                                'class': 'value',
+                                'html': function(obj) {
+                                    var value = getValue(obj.value);
+                                    if (value !== undefined) return (" : " + value);
+                                    else return ('');
+                                }
+                            },
+                            { 'tag': 'span', 'class': 'type', 'html': '${type}' }
+                        ]
+                    },
+                    { 'tag': 'div', 'class': 'children', 'children': function(obj) { return (children(obj.value)); } }
+                ]
+            }
+        };
+        var data = '{"header":{"version":"0.0.8","status":1,"message":""},"response":[{"productLine":"Classic Cars","products":38},{"productLine":"Motorcycles","products":13},{"productLine":"Planes","products":12},{"productLine":"Ships","products":9},{"productLine":"Trains","products":3},{"productLine":"Trucks and Buses","products":11},{"productLine":"Vintage Cars","products":24}]}';
+        $('#jsonSourceString').val(data);
+        $('#jsonTargetString').val(data);
+
+        function parseJson() {
+            var jsonSource = JSON.parse($('#jsonSourceString').val());
+            var jsonTarget = JSON.parse($('#jsonTargetString').val());
+            visualize($('#topSource'), jsonSource);
+            visualize($('#topTarget'), jsonTarget);
+
+        }
+
+        function initPlumb() {
+            jsPlumb.setContainer($('body'));
+            $('#topSource .type').each(function(i) {
+
+                jsPlumb.addEndpoint($($('#topSource .type')[i]), endpointOptionsSource);
+            });
+            $('#topTarget .type').each(function(i) {
+
+                jsPlumb.addEndpoint($($('#topTarget .name')[i]), endpointOptionsTarget);
+            });
+        }
+
+        function visualize(elm, json) {
+
+            elm.html('');
+
+            elm.json2html(convert('json', json, 'open'), transforms.object);
+
+
+            regEvents();
+            initPlumb();
+        }
+
+        $(function() {
+
+            $(document).on('click', '#visualize', function(e) {
+                parseJson();
+            });
+        });
+    </script>
+}
