@@ -18,5 +18,11 @@ namespace Mapper.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult Json2HtmlMap()
+        {
+            return View();
+
+        }
     }
 }

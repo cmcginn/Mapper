@@ -29,7 +29,7 @@ namespace Mapper.Web
             // Each immediate sub-directory of ~/Scripts will be combined into its own bundle.
             // This is useful when there are lots of scripts for different areas of the website.
             bundles.Add<ScriptBundle>("modernizr", new[] { "~/Scripts/modernizr-2.6.2.js" });
-            bundles.Add<ScriptBundle>("jquery", new[] { "~/Scripts/jquery-1.10.2.js" });
+            bundles.Add<ScriptBundle>("jquery", new[] { "~/Scripts/jquery-1.10.2.js", "~/Scripts/jquery-ui-1.11.3.js" });
             bundles.Add<ScriptBundle>("bootstrap", new[] { "~/Scripts/bootstrap.js" });
             bundles.Add<ScriptBundle>("json2html", new[]
             {
@@ -37,6 +37,7 @@ namespace Mapper.Web
                 "~/Scripts/Vendor/json2html/jquery.json2html.js",
                 "~/Scripts/Vendor/json2html/json2html.helper.js"
             });
+            bundles.Add<ScriptBundle>("jsplumb", new[] { "~/Scripts/Vendor/jsplumb/jquery.jsPlumb-1.7.3.js" });
             // Stylesheets
             bundles.Add<StylesheetBundle>("jquery", new[]
             {

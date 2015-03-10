@@ -70,7 +70,7 @@ function convert(name, obj, show) {
 
     var type = $.type(obj);
 
-    if (show === undefined) show = 'closed';
+    if (show === undefined) show = 'open';
 
     var children = [];
 
