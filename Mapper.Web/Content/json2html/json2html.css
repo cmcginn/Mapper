@@ -18,7 +18,7 @@
 		.open .arrow {background-position:-20px 0;}
 		.closed .arrow {background-position:0 0;}
 
-		.type {color:gray;font-size:8pt;float:right;}
+		.type {color:gray;font-size:8pt;}
 
 		.hide {display:none;}
 

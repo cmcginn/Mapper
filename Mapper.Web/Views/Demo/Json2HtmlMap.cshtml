@@ -49,11 +49,11 @@
         </div>
     </form>
     <div class="row">
-        <div class="col-sm-4" id="topSource">
+        <div class="col-sm-5" id="topSource">
 
         </div>
         <div class="col-sm-2"></div>
-        <div class="col-sm-4" id="topTarget">
+        <div class="col-sm-5" id="topTarget">
 
         </div>
     </div>
@@ -74,39 +74,141 @@
             endpointOptionsTarget = { endpoint: "Rectangle", anchor: ["Left", { shape: "Rectangle" }], isTarget: true };
         });
         var sourceNodes = [];
-        var transforms = {
+        //'tag':'span','class'
+        var sourceXForm = {
             'object': {
                 'tag': 'div',
                 'class': 'package ${show} ${type}',
                 'children': [
                     {
                         'tag': 'div',
-                        'class': 'header',
+                        'class': 'row header',
                         'children': [
                             {
                                 'tag': 'div',
-                                'class': function(obj) {
-                                    if (getValue(obj.value) !== undefined) return ('arrow hide');
-                                    else return ('arrow');
-                                }
-                            },
-                            { 'tag': 'span', 'class': 'name', 'html': '${name}' },
-                            {
-                                'tag': 'span',
-                                'class': 'value',
+                                'class': 'col-sm-4',
                                 'html': function(obj) {
-                                    var value = getValue(obj.value);
-                                    if (value !== undefined) return (" : " + value);
-                                    else return ('');
+                                    return obj.name + ':';
+
                                 }
-                            },
-                            { 'tag': 'span', 'class': 'type', 'html': '${type}' }
+                            }, {
+                                'tag': 'div',
+                                'class': 'col-sm-6',
+                                'html':function(obj) {
+                                  
+                                    var value = getValue(obj.value);
+                                    if (value == 'undefined')
+                                        value = '';
+                                    return value;
+                                }
+                            }, {
+                                'tag': 'div',
+                                'class': 'col-sm-1 type',
+                                'html':function(obj) {
+                                    var type = obj.type;
+                                    return type;
+                                }
+                            }, {
+                                'tag': 'div',
+                                'class': 'col-sm-1 anchor'
+
+                            }
                         ]
-                    },
-                    { 'tag': 'div', 'class': 'children', 'children': function(obj) { return (children(obj.value)); } }
+                    }, {
+                        'tag': 'div',
+                        'class': 'children',
+                        'children': function(obj) {
+                            return (children(obj.value));
+
+                        }
+                    }
                 ]
             }
         };
+        var targetXForm = {
+            'object': {
+                'tag': 'div',
+                'class': 'package ${show} ${type}',
+                'children': [
+                    {
+                        'tag': 'div',
+                        'class': 'row header',
+                        'children': [
+                            {
+                                'tag': 'div',
+                                'class': 'col-sm-1 anchor'
+
+                            },
+                            {
+                                'tag': 'div',
+                                'class': 'col-sm-4',
+                                'html': function (obj) {
+                                    return obj.name + ':';
+
+                                }
+                            }, {
+                                'tag': 'div',
+                                'class': 'col-sm-6',
+                                'html': function (obj) {
+
+                                    var value = getValue(obj.value);
+                                    if (value == 'undefined')
+                                        value = '';
+                                    return value;
+                                }
+                            }, {
+                                'tag': 'div',
+                                'class': 'col-sm-1 type',
+                                'html': function (obj) {
+                                    var type = obj.type;
+                                    return type;
+                                }
+                            }
+                        ]
+                    }, {
+                        'tag': 'div',
+                        'class': 'children',
+                        'children': function (obj) {
+                            return (children(obj.value));
+
+                        }
+                    }
+                ]
+            }
+        };
+        //var transforms2 = {
+        //    'object': {
+        //        'tag': 'div',
+        //        'class': 'package ${show} ${type}',
+        //        'children': [
+        //            {
+        //                'tag': 'div',
+        //                'class': 'header',
+        //                'children': [
+        //                    {
+        //                        'tag': 'div',
+        //                        'class': function(obj) {
+        //                            if (getValue(obj.value) !== undefined) return ('arrow hide');
+        //                            else return ('arrow');
+        //                        }
+        //                    },
+        //                    { 'tag': 'span', 'class': 'name', 'html': '${name}' },
+        //                    {
+        //                        'tag': 'span',
+        //                        'class': 'value',
+        //                        'html': function(obj) {
+        //                            var value = getValue(obj.value);
+        //                            if (value !== undefined) return (" : " + value);
+        //                            else return ('');
+        //                        }
+        //                    },
+        //                    { 'tag': 'span', 'class': 'type', 'html': '${type}' }
+        //                ]
+        //            },
+        //            { 'tag': 'div', 'class': 'children', 'children': function(obj) { return (children(obj.value)); } }
+        //        ]
+        //    }
+        //};
         var data = '{"header":{"version":"0.0.8","status":1,"message":""},"response":[{"productLine":"Classic Cars","products":38},{"productLine":"Motorcycles","products":13},{"productLine":"Planes","products":12},{"productLine":"Ships","products":9},{"productLine":"Trains","products":3},{"productLine":"Trucks and Buses","products":11},{"productLine":"Vintage Cars","products":24}]}';
         $('#jsonSourceString').val(data);
         $('#jsonTargetString').val(data);
@@ -114,7 +216,9 @@
         function parseJson() {
             var jsonSource = JSON.parse($('#jsonSourceString').val());
             var jsonTarget = JSON.parse($('#jsonTargetString').val());
+            transforms = sourceXForm;
             visualize($('#topSource'), jsonSource);
+            transforms = targetXForm;
             visualize($('#topTarget'), jsonTarget);
 
         }
@@ -139,7 +243,7 @@
 
 
             regEvents();
-            initPlumb();
+          //  initPlumb();
         }
 
         $(function() {
