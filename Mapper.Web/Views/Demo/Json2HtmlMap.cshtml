@@ -75,140 +75,44 @@
         });
         var sourceNodes = [];
         //'tag':'span','class'
-        var sourceXForm = {
-            'object': {
-                'tag': 'div',
-                'class': 'package ${show} ${type}',
-                'children': [
-                    {
-                        'tag': 'div',
-                        'class': 'row header',
-                        'children': [
-                            {
-                                'tag': 'div',
-                                'class': 'col-sm-4',
-                                'html': function(obj) {
-                                    return obj.name + ':';
 
-                                }
-                            }, {
-                                'tag': 'div',
-                                'class': 'col-sm-6',
-                                'html':function(obj) {
-                                  
-                                    var value = getValue(obj.value);
-                                    if (value == 'undefined')
-                                        value = '';
-                                    return value;
-                                }
-                            }, {
-                                'tag': 'div',
-                                'class': 'col-sm-1 type',
-                                'html':function(obj) {
-                                    var type = obj.type;
-                                    return type;
-                                }
-                            }, {
-                                'tag': 'div',
-                                'class': 'col-sm-1 anchor'
+        function getTransform(source) {
+            var result = {
+                'object': {
+                    'tag': 'div',
+                    'class': 'package ${show} ${type}',
+                    'children': [
+                        {
+                            'tag': 'div',
+                            'class': 'row',
+                            'html': function (obj) {
+                                var value = getValue(obj.value);
+                                if (value == undefined)
+                                    value = '';
+                                var anchorClass = value != '' ? 'anchor' : '';
+                                var html = '';
+                                if(source)
+                                    html='<div class="col-sm-12"><div class="col-sm-3">' + obj.name + ':</div><div class="col-sm-6">' + value + '</div><div class="col-sm-2">' + obj.type + '</div><div class="col-sm-1 ' + anchorClass + '"></div></div>';
+                                else
+                                    html = '<div class="col-sm-12"><div class="col-sm-1 ' + anchorClass + '"></div><div class="col-sm-3">' + obj.name + ':</div><div class="col-sm-6">' + value + '</div><div class="col-sm-2">' + obj.type + '</div></div>';
+                                return html;
+                            }
+                        }, {
+                            'tag': 'div',
+                            'class': 'children',
+                            'children': function (obj) {
+                                return (children(obj.value));
 
                             }
-                        ]
-                    }, {
-                        'tag': 'div',
-                        'class': 'children',
-                        'children': function(obj) {
-                            return (children(obj.value));
-
                         }
-                    }
-                ]
-            }
-        };
-        var targetXForm = {
-            'object': {
-                'tag': 'div',
-                'class': 'package ${show} ${type}',
-                'children': [
-                    {
-                        'tag': 'div',
-                        'class': 'row header',
-                        'children': [
-                            {
-                                'tag': 'div',
-                                'class': 'col-sm-1 anchor'
+                    ]
+                }
+            };
+            return result;
 
-                            },
-                            {
-                                'tag': 'div',
-                                'class': 'col-sm-4',
-                                'html': function (obj) {
-                                    return obj.name + ':';
+        }
+        
 
-                                }
-                            }, {
-                                'tag': 'div',
-                                'class': 'col-sm-6',
-                                'html': function (obj) {
-
-                                    var value = getValue(obj.value);
-                                    if (value == 'undefined')
-                                        value = '';
-                                    return value;
-                                }
-                            }, {
-                                'tag': 'div',
-                                'class': 'col-sm-1 type',
-                                'html': function (obj) {
-                                    var type = obj.type;
-                                    return type;
-                                }
-                            }
-                        ]
-                    }, {
-                        'tag': 'div',
-                        'class': 'children',
-                        'children': function (obj) {
-                            return (children(obj.value));
-
-                        }
-                    }
-                ]
-            }
-        };
-        //var transforms2 = {
-        //    'object': {
-        //        'tag': 'div',
-        //        'class': 'package ${show} ${type}',
-        //        'children': [
-        //            {
-        //                'tag': 'div',
-        //                'class': 'header',
-        //                'children': [
-        //                    {
-        //                        'tag': 'div',
-        //                        'class': function(obj) {
-        //                            if (getValue(obj.value) !== undefined) return ('arrow hide');
-        //                            else return ('arrow');
-        //                        }
-        //                    },
-        //                    { 'tag': 'span', 'class': 'name', 'html': '${name}' },
-        //                    {
-        //                        'tag': 'span',
-        //                        'class': 'value',
-        //                        'html': function(obj) {
-        //                            var value = getValue(obj.value);
-        //                            if (value !== undefined) return (" : " + value);
-        //                            else return ('');
-        //                        }
-        //                    },
-        //                    { 'tag': 'span', 'class': 'type', 'html': '${type}' }
-        //                ]
-        //            },
-        //            { 'tag': 'div', 'class': 'children', 'children': function(obj) { return (children(obj.value)); } }
-        //        ]
-        //    }
-        //};
         var data = '{"header":{"version":"0.0.8","status":1,"message":""},"response":[{"productLine":"Classic Cars","products":38},{"productLine":"Motorcycles","products":13},{"productLine":"Planes","products":12},{"productLine":"Ships","products":9},{"productLine":"Trains","products":3},{"productLine":"Trucks and Buses","products":11},{"productLine":"Vintage Cars","products":24}]}';
         $('#jsonSourceString').val(data);
         $('#jsonTargetString').val(data);
@@ -216,22 +120,22 @@
         function parseJson() {
             var jsonSource = JSON.parse($('#jsonSourceString').val());
             var jsonTarget = JSON.parse($('#jsonTargetString').val());
-            transforms = sourceXForm;
+            transforms = getTransform(true);
             visualize($('#topSource'), jsonSource);
-            transforms = targetXForm;
+            transforms = getTransform(false);
             visualize($('#topTarget'), jsonTarget);
 
         }
 
         function initPlumb() {
             jsPlumb.setContainer($('body'));
-            $('#topSource .type').each(function(i) {
+            $('#topSource .anchor').each(function(i) {
 
-                jsPlumb.addEndpoint($($('#topSource .type')[i]), endpointOptionsSource);
+                jsPlumb.addEndpoint($($('#topSource .anchor')[i]), endpointOptionsSource);
             });
-            $('#topTarget .type').each(function(i) {
+            $('#topTarget .anchor').each(function (i) {
 
-                jsPlumb.addEndpoint($($('#topTarget .name')[i]), endpointOptionsTarget);
+                jsPlumb.addEndpoint($($('#topTarget .anchor')[i]), endpointOptionsTarget);
             });
         }
 
@@ -243,7 +147,7 @@
 
 
             regEvents();
-          //  initPlumb();
+            initPlumb();
         }
 
         $(function() {
